@@ -1,6 +1,6 @@
 -module(http).
 
--export([parse_request/1]).
+-export([get/1, ok/1, parse_request/1]).
 
 % Request = Request-Line *(( general-header | request-header
 % | entity-header ) CRLF) CRLF [ message-body ]
@@ -42,3 +42,7 @@ header([C | R0]) ->
 
 % Body
 message_body(R) -> {R, []}.
+
+ok(Body) -> "HTTP/1.1 200 OK\r\n" ++ "\r\n" ++ Body.
+
+get(URI) -> "Get " ++ URI ++ " HTTP/1.1\r\n" ++ "\r\n".
