@@ -40,4 +40,4 @@ request(Client) ->
     end,
     gen_tcp:close(Client).                          % Close the connection
 
-reply({{get, _, _}, _, Body}) -> http:ok("test3").
+reply({{get, URI, _}, _, _}) -> http:ok(URI).
