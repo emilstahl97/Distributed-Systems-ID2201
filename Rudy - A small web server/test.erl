@@ -3,9 +3,9 @@
 -export([bench/2]).
 
 bench(Host, Port) ->
-    Start = erlang:system_time(micro_seconds),
+    Start = erlang:system_time(milli_seconds),
     run(100, Host, Port),
-    Finish = erlang:system_time(micro_seconds),
+    Finish = erlang:system_time(milli_seconds),
     Finish - Start.
 
 run(N, Host, Port) ->
