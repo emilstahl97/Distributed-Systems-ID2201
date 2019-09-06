@@ -1,10 +1,10 @@
 -module(test).
 
--export([bench/2]).
+-export([bench/3]).
 
-bench(Host, Port) ->
+bench(Host, Port, N) ->
     Start = erlang:system_time(micro_seconds),
-    run(100, Host, Port),
+    run(N, Host, Port),
     Finish = erlang:system_time(micro_seconds),
     Finish - Start.
 
