@@ -5,12 +5,7 @@
 
 -module(rudy).
 
--export([init/1, stop/0]).
-
-start(Port) ->
-    register(rudy, spawn(fun () -> init(Port) end)).
-
-stop() -> exit(whereis(rudy), "time to die"). %terminate server
+-export([init/1]).
 
 init(Port) ->
     Opt = [list, {active, false}, {reuseaddr, true}],
