@@ -40,4 +40,5 @@ request(Client) ->
     end,
     gen_tcp:close(Client).                          % Close the connection
 
-reply({{get, URI, _}, _, _}) -> http:ok(URI).
+reply({{get, URI, _}, _, _}) ->
+    timer:sleep(40), http:ok(URI).
