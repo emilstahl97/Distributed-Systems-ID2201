@@ -9,8 +9,7 @@ stop() -> exit(whereis(rudy), "time to die").
 
 init(Port) ->
     Opt = [list, {active, false}, {reuseaddr, true}],
-    case gen_tcp:listen(Port,
-			Opt)       % Opening the listening socket
+    case gen_tcp:listen(Port, Opt)       % Opening the listening socket
 	of
       {ok, Listen} ->
 	  handler(Listen),

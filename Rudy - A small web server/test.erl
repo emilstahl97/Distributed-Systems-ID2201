@@ -4,13 +4,13 @@
 
 bench(Host, Port, N) ->
     Start = erlang:system_time(micro_seconds),
-    run(N, Host, Port),
+    run(Host, Port, N),
     Finish = erlang:system_time(micro_seconds),
     Finish - Start.
 
-run(N, Host, Port) ->
+run(Host, Port, N) ->
     if N == 0 -> ok;
-       true -> request(Host, Port), run(N - 1, Host, Port)
+       true -> request(Host, Port), run(Host, Port, N-1)
     end.
 
 request(Host, Port) ->
