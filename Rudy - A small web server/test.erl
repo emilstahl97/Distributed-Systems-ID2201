@@ -26,10 +26,10 @@ request(Host, Port) ->
     Opt = [list, {active, false}, {reuseaddr, true}],
     {ok, Server} = gen_tcp:connect(Host, Port, Opt), %establish a TCP conncetion to server
     gen_tcp:send(Server, http:get("foo")), %send to socket 
-    Recv = gen_tcp:recv(Server, 0), 
+    Recv = gen_tcp:recv(Server, 0),
     case Recv of
       {ok, _} -> ok;
       {error, Error} ->
 	  io:format("test: error: ~w~n", [Error])
     end,
-    gen_tcp:close(Server).
+    gen_tcp:close(Server). %close the connection
