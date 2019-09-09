@@ -5,7 +5,7 @@
 
 -module(rudy).
 
--export([start/1, stop/0]).
+-export([init/1, stop/0]).
 
 start(Port) ->
     register(rudy, spawn(fun () -> init(Port) end)).
