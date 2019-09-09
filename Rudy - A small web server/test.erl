@@ -6,7 +6,7 @@
 
 -module(test).
 
--export([bench/3]).
+-export([bench/3, run/3]).
 
 bench(Host, Port, N) ->
     Start = erlang:system_time(micro_seconds), %Start measure execution time
