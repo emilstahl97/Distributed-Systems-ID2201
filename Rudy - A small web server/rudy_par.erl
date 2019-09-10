@@ -1,15 +1,6 @@
 -module(rudy_par).
 -export([main/1, start/1, stop/0]).
 
-%% My sequential/parallel macro
--ifdef(seq).
--define(MODE, "Sequential").
--define(REQUEST(X), request(X)).
--else.
--define(MODE, "Parallel").
--define(REQUEST(X), spawn_link(fun() -> request(X) end)).
--endif.
-
 % My main function
 main([A]) ->
 	Port = list_to_integer(atom_to_list(A)),
@@ -36,7 +27,7 @@ init(Port) ->
 handler(Listen) ->
 	case gen_tcp:accept(Listen) of
 		{ok, Client} ->
-			?REQUEST(Client), % my code
+			spawn_link(fun() -> request(Client) end), % my code
 			handler(Listen); % -''-
 		{error, _Error} ->
 			error
