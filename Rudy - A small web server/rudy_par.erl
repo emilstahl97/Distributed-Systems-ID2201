@@ -1,11 +1,5 @@
 -module(rudy_par).
--export([main/1, start/1, stop/0]).
-
-% My main function
-main([A]) ->
-	Port = list_to_integer(atom_to_list(A)),
-	start(Port),
-	io:format("Rudy started: ~s mode, Port ~w~n", ["Parallel", Port]).
+-export([start/1, stop/0]).
 
 start(Port) ->
 	register(rudy, spawn(fun() -> init(Port) end)).
