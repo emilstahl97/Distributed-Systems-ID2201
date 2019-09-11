@@ -1,3 +1,10 @@
+% This is a parallell version of the file rudy. 
+% Each incoming request spawns a new process that handles the request.
+% Which results in improved performance. 
+% @Emil Stahl
+% Date: September 9th 2019
+
+
 -module(rudy_par).
 -export([init/1]).
 
@@ -15,7 +22,7 @@ init(Port) ->
 handler(Listen) ->
 	case gen_tcp:accept(Listen) of
 		{ok, Client} ->
-			spawn_link(fun() -> request(Client) end), 
+			spawn_link(fun() -> request(Client) end), % spawn new process for each new request
 			handler(Listen); 
 		{error, _Error} ->
 			error

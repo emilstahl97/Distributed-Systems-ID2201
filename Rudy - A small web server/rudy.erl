@@ -1,5 +1,5 @@
-%This is a simple progrm that waits for an incoming request, 
-%delivers a reply and then terminates.
+% This is a simple program that waits for an incoming request, 
+% delivers a reply and then terminates.
 % @Emil Stahl
 % Date: September 9th 2019
 
