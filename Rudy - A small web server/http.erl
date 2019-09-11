@@ -1,3 +1,7 @@
+%Simple HTTP-parser
+% @Emil Stahl
+% Date: September 9th 2019
+
 -module(http).
 
 -export([parse_request/1, ok/1, get/1]).
