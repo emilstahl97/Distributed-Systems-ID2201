@@ -31,6 +31,7 @@ start() ->
 	timer:sleep(100),
     r4 ! update.
 
+
 stop() ->
     routy:stop(r1),
     routy:stop(r2),
