@@ -8,11 +8,11 @@ start() ->
     routy:start(f3, tampere),
 	routy:start(f4, turku),
 
-    f1 ! {add, rovaniemi, {f2, 'finland@2.248.87.26'}},
-    f3 ! {add, rovaniemi, {f2, 'finland@2.248.87.26'}},
-    f2 ! {add, tampere, {f3, 'finland@2.248.87.26'}},
-    f4 ! {add, tampere, {f3, 'finland@2.248.87.26'}},
-    f3 ! {add, turku, {f4, 'finland@2.248.87.26'}},
+    f1 ! {add, rovaniemi, {f2, 'sweden@2.248.87.26'}},
+    f3 ! {add, rovaniemi, {f2, 'sweden@2.248.87.26'}},
+    f2 ! {add, tampere, {f3, 'sweden@2.248.87.26'}},
+    f4 ! {add, tampere, {f3, 'sweden@2.248.87.26'}},
+    f3 ! {add, turku, {f4, 'sweden@2.248.87.26'}},
 
     f1 ! broadcast,
     timer:sleep(100),
