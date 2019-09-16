@@ -3,16 +3,16 @@
 
 start() ->
 
-    routy:start(f1, helsinki),
-    routy:start(f2, rovaniemi),
-    routy:start(f3, tampere),
-	routy:start(f4, turku),
+    routy:start(f1, stockholm),
+    routy:start(f2, kiruna),
+    routy:start(f3, gothenburg),
+	routy:start(f4, visby),
 
-    f1 ! {add, rovaniemi, {f2, 'sweden@2.248.87.26'}},
-    f3 ! {add, rovaniemi, {f2, 'sweden@2.248.87.26'}},
-    f2 ! {add, tampere, {f3, 'sweden@2.248.87.26'}},
-    f4 ! {add, tampere, {f3, 'sweden@2.248.87.26'}},
-    f3 ! {add, turku, {f4, 'sweden@2.248.87.26'}},
+    f1 ! {add, kiruna, {f2, 'sweden@2.248.87.26'}},
+    f3 ! {add, kiruna, {f2, 'sweden@2.248.87.26'}},
+    f2 ! {add, gothenburg, {f3, 'sweden@2.248.87.26'}},
+    f4 ! {add, gothenburg, {f3, 'sweden@2.248.87.26'}},
+    f3 ! {add, visby, {f4, 'sweden@2.248.87.26'}},
 
     f1 ! broadcast,
     timer:sleep(100),
