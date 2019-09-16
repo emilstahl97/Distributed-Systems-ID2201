@@ -3,6 +3,7 @@
 
 start() ->
 
+    io:format("Initiating cities... Stockholm, kiruna, gothenburg, visby ~n"),
     routy:start(r1, stockholm),
     routy:start(r2, kiruna),
     routy:start(r3, gothenburg),
