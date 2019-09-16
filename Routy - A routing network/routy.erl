@@ -22,7 +22,7 @@ init(Name) ->
 	%% Also returns an empty list
 	Map = map:new(),
 	
-	%% Call table with two emoty lists, which will also return an emoty list
+	%% Call table with two empty lists, which will also return an empty list
 	Table = dijkstra:table(Intf, Map),
 	
 	%% Create a history for the new router
