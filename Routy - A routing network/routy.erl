@@ -19,7 +19,6 @@ stop(Node) ->
 init(Name) ->
 	%% Just returns an empty list
 	Intf = interfaces:new(),
-	
 	%% Also returns an empty list
 	Map = map:new(),
 	
