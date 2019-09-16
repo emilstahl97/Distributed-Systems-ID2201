@@ -1,38 +1,38 @@
 -module(test).
--compile(export_all).
+-compile([start/0, stop/0]).
 
 start() ->
 
-    routy:start(f1, stockholm),
-    routy:start(f2, kiruna),
-    routy:start(f3, gothenburg),
-	routy:start(f4, visby),
+    routy:start(r1, stockholm),
+    routy:start(r2, kiruna),
+    routy:start(r3, gothenburg),
+	routy:start(r4, visby),
 
-    f1 ! {add, kiruna, {f2, 'sweden@2.248.87.26'}},
-    f3 ! {add, kiruna, {f2, 'sweden@2.248.87.26'}},
-    f2 ! {add, gothenburg, {f3, 'sweden@2.248.87.26'}},
-    f4 ! {add, gothenburg, {f3, 'sweden@2.248.87.26'}},
-    f3 ! {add, visby, {f4, 'sweden@2.248.87.26'}},
+    r1 ! {add, kiruna, {r2, 'sweden@2.248.87.26'}},
+    r3 ! {add, kiruna, {r2, 'sweden@2.248.87.26'}},
+    r2 ! {add, gothenburg, {r3, 'sweden@2.248.87.26'}},
+    r4 ! {add, gothenburg, {r3, 'sweden@2.248.87.26'}},
+    r3 ! {add, visby, {r4, 'sweden@2.248.87.26'}},
 
-    f1 ! broadcast,
+    r1 ! broadcast,
     timer:sleep(100),
-    f2 ! broadcast,
+    r2 ! broadcast,
     timer:sleep(100),
-    f3 ! broadcast,
+    r3 ! broadcast,
     timer:sleep(100),
-	f4 ! broadcast,
+	r4 ! broadcast,
     timer:sleep(100),
 
-    f1 ! update,
+    r1 ! update,
     timer:sleep(100),
-    f2 ! update,
+    r2 ! update,
     timer:sleep(100),
-    f3 ! update,
+    r3 ! update,
 	timer:sleep(100),
-    f4 ! update.
+    r4 ! update.
 
 stop() ->
-    routy:stop(f1),
-    routy:stop(f2),
-    routy:stop(f3),
-	routy:stop(f4).
+    routy:stop(r1),
+    routy:stop(r2),
+    routy:stop(r3),
+	routy:stop(r4).
