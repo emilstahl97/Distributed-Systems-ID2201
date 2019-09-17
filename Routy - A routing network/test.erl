@@ -10,9 +10,13 @@ start() ->
 	routy:start(r4, visby),
 
     r1 ! {add, kiruna, {r2, 'sweden@localhost'}},
+    timer:sleep(100),
     r3 ! {add, kiruna, {r2, 'sweden@localhost'}},
+    timer:sleep(100),
     r2 ! {add, gothenburg, {r3, 'sweden@localhost'}},
+    timer:sleep(100),
     r4 ! {add, gothenburg, {r3, 'sweden@localhost'}},
+    timer:sleep(100),
     r3 ! {add, visby, {r4, 'sweden@localhost'}},
 
     r1 ! broadcast,
