@@ -11,6 +11,8 @@ start() ->
 
     r1 ! {add, kiruna, {r2, 'sweden@localhost'}},
     timer:sleep(100),
+    r2 ! {add, stockholm, {r1, 'sweden@localhost'}},
+    timer:sleep(100),
     r3 ! {add, kiruna, {r2, 'sweden@localhost'}},
     timer:sleep(100),
     r2 ! {add, gothenburg, {r3, 'sweden@localhost'}},
