@@ -107,7 +107,7 @@ router(Name, N, Hist, Intf, Table, Map) ->
 	%% forward the message to the gateway. If we do not find a routing entry or do not find a interface of a gateway we have
 	%% a problem, simply drop the packet and keep smiling.
 	{route, To, From, Message} ->
-		io:format("~w: routing message (~w)", [Name, Message]),
+		io:format("~w: routing message of (~w)", [Name, Message]),
 		%% Find the gateway we want to route the message to
 		case dijkstra:route(To, Table) of
 			{ok, Gw} ->
