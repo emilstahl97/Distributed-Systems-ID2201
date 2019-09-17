@@ -100,7 +100,7 @@ router(Name, N, Hist, Intf, Table, Map) ->
 	%% As the name of the process matches the name we get as an argument in the function, we know that
 	%% the message has actually arrived at the final destination.
 	{route, Name, From, Message} ->
-		io:format("~w: received message ~w ~n", [Name, Message]),
+		io:format("~w: Received message ~w ~n", [Name, Message]),
 		router(Name, N, Hist, Intf, Table, Map);
 
 	%% If the message is not ours we should forward it. If we find a suitable gateway in the routing table we simply 
