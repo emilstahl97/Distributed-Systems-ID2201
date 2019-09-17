@@ -9,11 +9,11 @@ start() ->
     routy:start(r3, gothenburg),
 	routy:start(r4, visby),
 
-    r1 ! {add, kiruna, {r2, 'sweden@2.248.87.26'}},
-    r3 ! {add, kiruna, {r2, 'sweden@2.248.87.26'}},
-    r2 ! {add, gothenburg, {r3, 'sweden@2.248.87.26'}},
-    r4 ! {add, gothenburg, {r3, 'sweden@2.248.87.26'}},
-    r3 ! {add, visby, {r4, 'sweden@2.248.87.26'}},
+    r1 ! {add, kiruna, {r2, 'sweden@localhost'}},
+    r3 ! {add, kiruna, {r2, 'sweden@localhost'}},
+    r2 ! {add, gothenburg, {r3, 'sweden@localhost'}},
+    r4 ! {add, gothenburg, {r3, 'sweden@localhost'}},
+    r3 ! {add, visby, {r4, 'sweden@localhost'}},
 
     r1 ! broadcast,
     timer:sleep(100),
