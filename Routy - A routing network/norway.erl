@@ -3,44 +3,44 @@
 
 start() ->
 
-    io:format("Initiating cities... montreal, toronto, vancouver, calgary ~n"),
-    routy:start(c1, montreal),
-    routy:start(c2, toronto),
-    routy:start(c3, vancouver),
-	routy:start(c4, calgary),
+    io:format("Initiating cities... oslo, bergen, stavanger, trondheim ~n"),
+    routy:start(n1, oslo),
+    routy:start(n2, bergen),
+    routy:start(n3, stavanger),
+	routy:start(n4, trondheim),
 
-    c1 ! {add, toronto, {c2, 'canada@CAN'}},
+    n1 ! {add, bergen, {n2, 'norway@2.248.87.26'}},
     timer:sleep(100),
-    c2 ! {add, montreal, {c1, 'canada@CAN'}},
+    n2 ! {add, oslo, {n1, 'norway@2.248.87.26'}},
     timer:sleep(100),
-    c3 ! {add, toronto, {c2, 'canada@CAN'}},
+    n3 ! {add, bergen, {n2, 'norway@2.248.87.26'}},
     timer:sleep(100),
-    c2 ! {add, vancouver, {c3, 'canada@CAN'}},
+    n2 ! {add, stavanger, {n3, 'norway@2.248.87.26'}},
     timer:sleep(100),
-    c4 ! {add, vancouver, {c3, 'canada@CAN'}},
+    n4 ! {add, stavanger, {n3, 'norway@2.248.87.26'}},
     timer:sleep(100),
-    c3 ! {add, calgary, {c4, 'canada@CAN'}},
+    n3 ! {add, trondheim, {n4, 'norway@2.248.87.26'}},
 
-    c1 ! broadcast,
+    n1 ! broadcast,
     timer:sleep(100),
-    c2 ! broadcast,
+    n2 ! broadcast,
     timer:sleep(100),
-    c3 ! broadcast,
+    n3 ! broadcast,
     timer:sleep(100),
-	c4 ! broadcast,
+	n4 ! broadcast,
     timer:sleep(100),
 
-    c1 ! update,
+    n1 ! update,
     timer:sleep(100),
-    c2 ! update,
+    n2 ! update,
     timer:sleep(100),
-    c3 ! update,
+    n3 ! update,
 	timer:sleep(100),
-    c4 ! update.
+    n4 ! update.
 
 
 stop() ->
-    routy:stop(c1),
-    routy:stop(c2),
-    routy:stop(c3),
-	routy:stop(c4).
+    routy:stop(n1),
+    routy:stop(n2),
+    routy:stop(n3),
+	routy:stop(n4).
