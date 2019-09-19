@@ -1,0 +1,6 @@
+erlc map.erl
+erlc dijkstra.erl
+erlc fixture.erl
+erlc hist.erl
+erlc intf.erl
+erlc routy.erl
