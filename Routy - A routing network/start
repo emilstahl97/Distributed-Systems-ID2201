@@ -1,0 +1,7 @@
+Type in terminal to start the sweden shell:
+
+erl -name sweden@2.248.87.26 -setcookie routy -connect_all false
+
+Followed by:
+
+sweden:start().
