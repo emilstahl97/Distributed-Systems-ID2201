@@ -2,10 +2,12 @@
 
 Course at KTH - Royal Institute of Technology 
 
-The course covers fundamental models for distributed systems, inter process communication and how to handle synchronization, 
-consistency, replication, fault tolerance and security in a distributed system. The course consist of a series of lectures 
-and seminars that include practical assignments. The assignments will be programming tasks that exemplify problem statements 
-examined in the course.
+Content and learning outcomes
+Course contents *
+
+The course covers fundamental models for distributed systems, inter process communication and how to handle synchronization, consistency, replication, fault tolerance and security in a distributed system. The course consist of a series of lectures and seminars that include practical assignments. The assignments will be programming tasks that exemplify problem statements examined in the course.
+
+Intended learning outcomes *
 
 The students shall after the course be able to:
 
