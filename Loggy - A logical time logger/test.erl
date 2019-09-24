@@ -22,7 +22,7 @@ run(Sleep, Jitter, Timer) ->
 
 run_vect(Sleep, Jitter, Timer) ->
 	Log = loggy_vect:start([john, paul, ringo, george]),
-	A = worker:start(john, Log, 13, Sleep, Jitter),
+	A = worker_vect:start(john, Log, 13, Sleep, Jitter),
 	B = worker_vect:start(paul, Log, 23, Sleep, Jitter),
 	C = worker_vect:start(ringo, Log, 36, Sleep, Jitter),
 	D = worker_vect:start(george, Log, 49, Sleep, Jitter),
