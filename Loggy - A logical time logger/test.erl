@@ -1,5 +1,5 @@
 -module(test).
--export([run/2]).
+-export([run/3]).
 
 run(Sleep, Jitter, Timer) ->
 	Log = loggy:start([john, paul, ringo, george]),
