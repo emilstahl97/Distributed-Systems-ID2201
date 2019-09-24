@@ -1,4 +1,4 @@
--module(loggy_vect).
+-module(loggy).
 
 -export([start/1, stop/1]).
 
@@ -9,14 +9,14 @@ stop(Logger) ->
    	Logger ! stop.
 
 init(Nodes) ->
-	loop(vect:clock(Nodes), []).
+	loop(time:clock(Nodes), []).
 
 loop(Clock, HoldBackQueue) ->
 	%% Receive log message
 	receive
 		{log, From, Time, Msg} ->
 			%% Update the clock when we receive a message 
-			UpdatedClock = vect:update(From, Time, Clock),
+			UpdatedClock = time:update(From, Time, Clock),
 			
 			%% Add the new message to the hold-back queue
 			UpdatedHBQ = [{From, Time, Msg}|HoldBackQueue],
@@ -42,7 +42,7 @@ checkSafetyAndLog([], _, Acc)->
 	Acc;
 checkSafetyAndLog([{From, Time, Msg}|T], Clock, Acc)->
 	%% Check safety
-	case vect:safe(Time, Clock) of
+	case time:safe(Time, Clock) of
 		%% If it is safe
 		true ->
 			%% Log message
