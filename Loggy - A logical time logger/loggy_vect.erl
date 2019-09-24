@@ -1,4 +1,4 @@
--module(loggy).
+-module(loggy_vect).
 
 -export([start/1, stop/1]).
 
