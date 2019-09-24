@@ -12,6 +12,7 @@ init(Nodes) ->
 	loop(time:clock(Nodes), []).
 
 loop(Clock, HoldBackQueue) ->
+	%% Receive log message
 	receive
 		{log, From, Time, Msg} ->
 			%% Update the clock when we receive a message 
