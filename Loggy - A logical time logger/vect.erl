@@ -1,45 +1,54 @@
 -module(vect).
 -export([zero/0, inc/2, merge/2, leq/2, clock/1, update/3, safe/2]).
 
-zero() ->
-	[].
+zero() -> [].
 
-inc(Name, Clock) ->
-	Time1 = case lists:keyfind(Name, 1, Clock) of
-		{Name, Time} ->
-			Time+1;
-		false ->
-			1
-	end,
-	lists:keystore(Name, 1, Clock, {Name, Time1}).
+inc(Name, Time) ->
+  case lists:keyfind(Name, 1, Time) of
+    {Name, Old} ->
+      lists:keyreplace(Name, 1, Time, {Name, Old + 1});
+    false ->
+      [{Name, 1}|Time]
+  end.
 
-merge([], Clock) ->
-	Clock;
-merge([{Name, Ti}|Rest], Clock) ->
-	Time = case lists:keyfind(Name, 1, Clock) of
-		{Name, Tj} ->
-			max(Ti, Tj);
-		false ->
-			1
-	end,
-	merge(Rest, lists:keystore(Name, 1, Clock, {Name, Time})).
+%% merge timestamps
+merge([], Time) ->
+  Time;
+merge([{Name, Ti}|Rest], Time) ->
+  case lists:keyfind(Name, 1, Time) of
+    {Name, Tj} ->
+      [{Name, max(Ti, Tj)} | merge(Rest, lists:keydelete(Name, 1, Time))];
+    false ->
+      [{Name, Ti}|merge(Rest, Time)]
+  end.
 
+%% Ti <= Tj
+leq([], _) ->
+  true;
+leq([{Name, Ti}|Rest],Time) ->
+  case lists:keyfind(Name, 1, Time) of
+    {Name, Tj} ->
+      if
+        Ti =< Tj ->
+          leq(Rest, lists:keydelete(Name, 1, Time));
+        true ->
+          false
+      end;
+    false ->
+      false
+  end.
 
-leq(Clock1, Clock2) ->
-	lists:all(fun(N, T1) ->
-		case lists:keyfind(N, 1, Clock2) of
-			{N, T2} ->
-				T1 =< T2;
-			false ->
-				T1 =< 0
-		end
-	end, Clock1).
+clock(_) ->
+  [].
 
-clock(Nodes) ->
-	na.
+update(From, Time, Clock) ->
+  {From, RecTime} = lists:keyfind(From, 1, Time),
+    case lists:keyfind(From, 1, Clock) of
+      {From, _} ->
+        lists:keyreplace(From, 1, Clock, {From, RecTime});
+      false ->
+        [{From, RecTime} | Clock]
+    end.
 
-update(Node, Time, Clock) ->
-	na.
-
-safe(Time, Clock)  ->
-	na.
+safe(Time, Clock) ->
+  leq(Time, Clock).
