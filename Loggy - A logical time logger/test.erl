@@ -27,7 +27,7 @@ run_vect(Sleep, Jitter, Timer) ->
 	D = worker:start(george, Log, 49, Sleep, Jitter),
 	worker:peers(A, [B, C, D]),
 	worker:peers(B, [A, C, D]),
-	worker:peers(C, [A, B, D]),
+	worker:peers(C, [A, B, D]), 
 	worker:peers(D, [A, B, C]),
 	timer:sleep(Timer),
 	loggy_vect:stop(Log),
