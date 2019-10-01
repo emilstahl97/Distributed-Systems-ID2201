@@ -12,7 +12,7 @@ start(Id) ->
 
 init(Id, Rnd, Master) ->
     random:seed(Rnd, Rnd, Rnd),
-    gms1:start(Id, Master).
+    gms1:init(Id, Master).
 
 %% Slave
 
@@ -22,7 +22,7 @@ start(Id, Grp) ->
 
 init(Id, Rnd, Grp, Master) ->
     random:seed(Rnd, Rnd, Rnd),
-	gms1:slave_hello(Id, Grp, Master),
+    gms1:slave_hello(Id, Grp, Master),
     Grp ! {join, Master, self()}, % to someone in the group
     receive
         {view, [Leader|Slaves], Group} ->
@@ -55,7 +55,7 @@ slave(Id, Master, Leader, Slaves, Group) ->
             election(Id, Master, Slaves, Group);
 
         stop ->
-			ok
+            ok
     end.
     
 election(Id, Master, Slaves, [_|Group]) ->
