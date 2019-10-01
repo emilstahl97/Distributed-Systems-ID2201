@@ -1,6 +1,3 @@
-% handling the starting of a single node second version
-% handling failure
-
 -module(gms4).
 -compile(export_all).
 
@@ -10,9 +7,9 @@
 
 % initiate a process that is the first node in a group
 start(Id) ->
-    Rnd = random:uniform(1000),
+ random:uniform(1000),
     Self = self(),
-    {ok, spawn_link(fun()-> init_leader(Id, Rnd, Self) end)}.
+    {ok, spawn_link(fun()-> init_leader(Id, random:uniform(1000), Self) end)}.
 
 init_leader(Id, Rnd, Master) ->
     random:seed(Rnd, Rnd, Rnd),
@@ -121,7 +118,7 @@ sendMsg(Node, Msg) ->
     case random:uniform(?riskOfloosing) of
 
       % if a message was lost, no ack will be received
-      ?riskOfloosing -> io:format("Message ~w was lost ~n", [Msg]);
+      ?riskOfloosing -> io:format("Message ~w to Node ~w was lost \n", [Msg, Node]);
 
       % send message to node, ack will be received
       _ -> Node ! Msg
@@ -132,7 +129,8 @@ sendMsg(Node, Msg) ->
           {ack, Id} -> 
           io:format("Node ~w received message ~w with Id = ~w\n", [Node, Msg, Id])
         after 100 ->
-          sendMsg(Node, Msg)
+          sendMsg(Node, Msg),
+          io:format("Resending of message ~w to Node ~w\n", [Msg, Node])
       end.
 
 % a random crash
