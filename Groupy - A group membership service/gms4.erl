@@ -14,8 +14,7 @@ init_leader(Id, Rnd, Master) ->
     leader(Id, Master, 0, [], [Master]).
 
 start(Id, Grp) ->
-    Self = self(),
-    {ok, spawn_link(fun()-> init(Id, Grp, Self) end)}.
+    gms3:start(Id, Grp).
 
 % start node that should join the group
 init(Id, Grp, Master) ->
