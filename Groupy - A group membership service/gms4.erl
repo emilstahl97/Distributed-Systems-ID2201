@@ -9,23 +9,23 @@
 start(Id) ->
     gms3:start(Id).
 
-init_leader(Id, Rnd, Master) ->
-    random:seed(Rnd, Rnd, Rnd),
-    leader(Id, Master, 0, [], [Master]).
+init(Id, Rnd, Master) ->
+    gms3:init(Id, Rnd, Master).
 
 start(Id, Grp) ->
     gms3:start(Id, Grp).
 
 % start node that should join the group
-init(Id, Grp, Master) ->
-    Self = self(),
-    Grp ! {join, Master, Self},
+init(Id, Rnd, Grp, Master) ->
+    random:seed(Rnd, Rnd, Rnd),
+    gms1:slave_hello(Id, Grp, Master),
+    Grp ! {join, Master, self()},
     receive
         % invitation of new view after joining group
         {view, N, [Leader|Slaves], Group} ->
+            erlang:monitor(process, Leader),    % monitor the leader
             Leader ! {ack, Id},
             Master ! {view, Group},
-            erlang:monitor(process, Leader),    % monitor the leader
             slave(Id, Master, Leader, N+1, {view, N, [Leader|Slaves], Group}, Slaves, Group)  % initial state is slave
 
     % timeout when waiting for an invitation to join group
