@@ -7,7 +7,7 @@
 
 % initiate a process that is the first node in a group
 start(Id) ->
- random:uniform(1000),
+    random:uniform(1000),
     Self = self(),
     {ok, spawn_link(fun()-> init_leader(Id, random:uniform(1000), Self) end)}.
 
@@ -42,7 +42,7 @@ leader(Id, Master, N, Slaves, Group) ->
     receive
     % message from master or peer node
     {mcast, Msg} ->
-        bcast(Id, {msg, N, Msg}, Slaves),
+        gms1:leader_bcast(Id, {msg, N, Msg}, Slaves),
         Master ! Msg,
         leader(Id, Master, N+1, Slaves, Group);
     % request from node to join group
@@ -50,7 +50,7 @@ leader(Id, Master, N, Slaves, Group) ->
         % add the new node to the slaves and the group
         Slaves2 = lists:append(Slaves, [Peer]),
         Group2 = lists:append(Group, [Wrk]),
-        bcast(Id, {view, N, [self()|Slaves2], Group2}, Slaves2),
+        gms1:leader_bcast(Id, {view, N, [self()|Slaves2], Group2}, Slaves2),
         Master ! {view, Group2},
         leader(Id, Master, N+1, Slaves2, Group2);
 
