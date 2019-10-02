@@ -1,21 +1,43 @@
 -module(gms4).
--compile(export_all).
-
 -define(timeout, 1000).
 -define(arghh, 500).
 -define(riskOfloosing, 100).
+-compile(export_all).
+
 
 % initiate a process that is the first node in a group
 start(Id) ->
-    gms3:start(Id).
-
+    Self = self(),
+    {ok, spawn_link(fun()-> init(Id, random:uniform(1000), Self) end)}.
+    
 init(Id, Rnd, Master) ->
-    gms3:init(Id, Rnd, Master).
+        random:seed(Rnd, Rnd, Rnd),
+        gms1:leader_hello(Id, Master),
+        gms1:leader_status(Id, Slaves = [], Group = [Master]),
+        leader(Id, Master, 0, Slaves, Group).
 
-start(Id, Grp) ->
-    gms3:start(Id, Grp).
+% leader procedure
+leader(Id, Master, N, Slaves, Group) ->
+      %io:format("~w~n", [N]),
+      receive
+            {mcast, Msg} ->
+                bcast(Id, {msg, N, Msg}, Slaves), % first to next leader
+                Master ! Msg,
+                leader(Id, Master, N+1, Slaves, Group);
+            {join, Wrk, Peer} ->
+                Slaves2 = lists:append(Slaves, [Peer]),
+                Group2 = lists:append(Group, [Wrk]),
+                bcast(Id, {view,N,[self()|Slaves2],Group2}, Slaves2),
+                Master ! {view, Group2},
+                leader(Id, Master, N+1, Slaves2, Group2);
+            stop -> ok
+        end.
 
-% start node that should join the group
+    start(Id, Grp) ->
+    Self = self(),
+    {ok, spawn_link(fun()-> init(Id, random:uniform(1000), Grp, Self) end)}.
+
+        % start node that should join the group
 init(Id, Rnd, Grp, Master) ->
     random:seed(Rnd, Rnd, Rnd),
     gms1:slave_hello(Id, Grp, Master),
@@ -34,29 +56,41 @@ init(Id, Rnd, Grp, Master) ->
             Master ! {error, "no reply from leader"}
     end.
 
-% leader procedure
-leader(Id, Master, N, Slaves, Group) ->
-  %io:format("~w~n", [N]),
-  receive
-        {mcast, Msg} ->
-            gms1:leader_bcast(Id, {msg, N, Msg}, Slaves), % first to next leader
-            Master ! Msg,
-            leader(Id, Master, N+1, Slaves, Group);
-        {join, Wrk, Peer} ->
-            Slaves2 = lists:append(Slaves, [Peer]),
-            Group2 = lists:append(Group, [Wrk]),
-            gms1:leader_bcast(Id, {view,N,[self()|Slaves2],Group2}, Slaves2),
-            Master ! {view, Group2},
-            leader(Id, Master, N+1, Slaves2, Group2);
-        stop -> ok
-    end.
 
 % slave procedure
 % accepts messages from master and leader
 % has a sequence number and a copy of last message from leader
 slave(Id, Master, Leader, N, Last, Slaves, Group) ->
-    gms3:slave(Id, Master, Leader, N, Last, Slaves, Group).
-       
+        receive
+                {mcast, Msg} ->
+                    Leader ! {mcast, Msg},
+                    slave(Id, Master, Leader, N, Last, Slaves, Group);
+                {join, Wrk, Peer} ->
+                    Leader ! {join, Wrk, Peer},
+                    slave(Id, Master, Leader, N, Last, Slaves, Group);
+        
+                % updated for reliable multicast, ignore old messages
+                {msg, I, Msg} ->
+                    case I < N of
+                        true ->
+                            slave(Id, Master, Leader, N, Last, Slaves, Group);
+                        false ->
+                            Master ! Msg,
+                            Last2 = {msg, I, Msg},
+                            slave(Id, Master, Leader, I+1, Last2, Slaves, Group)
+                    end;
+                {view, I, [Leader|Slaves2], Group2} ->
+                    Master ! {view, Group2},
+                    Last2 = {view, I, [Leader|Slaves2], Group2},
+                    slave(Id, Master, Leader, I+1, Last2, Slaves2, Group2);
+        
+                % leader crashed
+                {'DOWN', _Ref, process, Leader, _Reason} ->
+                    election(Id, Master, N, Last, Slaves, Group);
+        
+                stop ->
+                    ok
+            end.       
 
 
 % election procedure
@@ -103,4 +137,4 @@ sendMsg(Node, Msg) ->
 % a random crash
 % an arghh value of 100 means that the system will crash in average once in a hundred
 crash(Id) ->
-  gms:crash(Id).
+  gms1:crash(Id).
