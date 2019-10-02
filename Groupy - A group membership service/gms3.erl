@@ -1,6 +1,6 @@
 -module(gms3).
 -define(timeout, 1000).
--export([start/1, start/2, slave/7]). % API
+-export([start/1, start/2]). % API
 
 %% Leader
 
