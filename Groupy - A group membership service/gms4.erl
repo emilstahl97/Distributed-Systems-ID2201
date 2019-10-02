@@ -79,7 +79,7 @@ election(Id, Master, N, Last, Slaves, [_|Group]) ->
         % the first node in the list is the leader
         [Leader|Rest] ->
             erlang:monitor(process, Leader),
-            gms1:slave(Id, Master, Leader, N, Last, Rest, Group)
+            gms3:slave(Id, Master, Leader, N, Last, Rest, Group)
     end.
 
 % broadcasts a message to all
@@ -110,10 +110,4 @@ sendMsg(Node, Msg) ->
 % a random crash
 % an arghh value of 100 means that the system will crash in average once in a hundred
 crash(Id) ->
-  case random:uniform(?arghh) of
-      ?arghh ->
-          io:format("leader ~w: crash~n", [Id]),
-          exit(no_luck);
-      _ ->
-          ok
-  end.
+  gms:crash(Id).
