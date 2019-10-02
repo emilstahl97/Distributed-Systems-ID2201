@@ -129,9 +129,13 @@ sendMsg(Node, Msg) ->
           {ack, Id} -> 
           io:format("Node ~w received message ~w with Id = ~w\n", [Node, Msg, Id])
         after 100 ->
-          sendMsg(Node, Msg),
-          io:format("Resending of message ~w to Node ~w\n", [Msg, Node])
+          resend(Node, Msg)
       end.
+    
+resend(Node, Msg) ->
+    io:format("Resending of message ~w to Node ~w\n", [Msg, Node]),
+    sendMsg(Node, Msg).
+
 
 % a random crash
 % an arghh value of 100 means that the system will crash in average once in a hundred
