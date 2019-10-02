@@ -7,7 +7,7 @@
 % API
 -export([
     start/1, init/2, leader/4, leader_hello/2, leader_status/3, leader_bcast/3,
-    start/2, slave_hello/3
+    start/2, slave_hello/3, slave/7
 ]).
 
 %% Leader

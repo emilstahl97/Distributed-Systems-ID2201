@@ -62,35 +62,37 @@ leader(Id, Master, N, Slaves, Group) ->
 % accepts messages from master and leader
 % has a sequence number and a copy of last message from leader
 slave(Id, Master, Leader, N, Last, Slaves, Group) ->
-  receive
-      % request from master to multicast message
-      {mcast, Msg} ->
-          Leader ! {mcast, Msg},
-          slave(Id, Master, Leader, N, Last, Slaves, Group);
-      % request from master to allow new node to join the group
-      {join, Wrk, Peer} ->
-          Leader ! {join, Wrk, Peer},
-          slave(Id, Master, Leader, N, Last, Slaves, Group);
-      % multicasted message from leader
-      {msg, N, Msg} ->
-          Leader ! {ack, Id},
-          Master ! Msg,
-          slave(Id, Master, Leader, N+1, {msg, N, Msg}, Slaves, Group);
-      % old message, do nothing with it
-      {msg, I, _} when I < N ->
-          Leader ! {ack, Id},
-          slave(Id, Master, Leader, N, Last, Slaves, Group);
-      % multicasted view from leader
-      {view, N, [Leader|Slaves2], Group2} ->
-          Leader ! {ack, Id},
-          Master ! {view, Group2},
-          slave(Id, Master, Leader, N+1, {view, N, [Leader|Slaves2], Group2}, Slaves2, Group2);
-      % when the leader dies
-      {'DOWN', _Ref, process, Leader, _Reason} ->
-          election(Id, Master, N, Last, Slaves, Group);
-      stop ->
-          ok
-  end.
+        receive
+                {mcast, Msg} ->
+                    Leader ! {mcast, Msg},
+                    slave(Id, Master, Leader, N, Last, Slaves, Group);
+                {join, Wrk, Peer} ->
+                    Leader ! {join, Wrk, Peer},
+                    slave(Id, Master, Leader, N, Last, Slaves, Group);
+        
+                % updated for reliable multicast, ignore old messages
+                {msg, I, Msg} ->
+                    case I < N of
+                        true ->
+                            slave(Id, Master, Leader, N, Last, Slaves, Group);
+                        false ->
+                            Master ! Msg,
+                            Last2 = {msg, I, Msg},
+                            slave(Id, Master, Leader, I+1, Last2, Slaves, Group)
+                    end;
+                {view, I, [Leader|Slaves2], Group2} ->
+                    Master ! {view, Group2},
+                    Last2 = {view, I, [Leader|Slaves2], Group2},
+                    slave(Id, Master, Leader, I+1, Last2, Slaves2, Group2);
+        
+                % leader crashed
+                {'DOWN', _Ref, process, Leader, _Reason} ->
+                    election(Id, Master, N, Last, Slaves, Group);
+        
+                stop ->
+                    ok
+            end.
+
 
 % election procedure
 election(Id, Master, N, Last, Slaves, [_|Group]) ->
@@ -105,7 +107,7 @@ election(Id, Master, N, Last, Slaves, [_|Group]) ->
         % the first node in the list is the leader
         [Leader|Rest] ->
             erlang:monitor(process, Leader),
-            slave(Id, Master, Leader, N, Last, Rest, Group)
+            gms1:slave(Id, Master, Leader, N, Last, Rest, Group)
     end.
 
 % broadcasts a message to all
