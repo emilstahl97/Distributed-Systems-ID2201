@@ -4,7 +4,6 @@
 -define(arghh, 500).
 -define(riskOfloosing, 100).
 
-
 % initiate a process that is the first node in a group
 start(Id) ->
     Self = self(),
@@ -20,15 +19,15 @@ leader(Id, Master, N, Slaves, Group) ->
     %io:format("~w~n", [N]),
     receive
         {mcast, Msg} ->
-                bcast(Id, {msg, N, Msg}, Slaves), % first to next leader
-                Master ! Msg,
-                leader(Id, Master, N+1, Slaves, Group);
+            bcast(Id, {msg, N, Msg}, Slaves), % first to next leader
+            Master ! Msg,
+            leader(Id, Master, N+1, Slaves, Group);
         {join, Wrk, Peer} ->
-                Slaves2 = lists:append(Slaves, [Peer]),
-                Group2 = lists:append(Group, [Wrk]),
-                bcast(Id, {view,N,[self()|Slaves2],Group2}, Slaves2),
-                Master ! {view, Group2},
-                leader(Id, Master, N+1, Slaves2, Group2);
+            Slaves2 = lists:append(Slaves, [Peer]),
+            Group2 = lists:append(Group, [Wrk]),
+            bcast(Id, {view,N,[self()|Slaves2],Group2}, Slaves2),
+            Master ! {view, Group2},
+            leader(Id, Master, N+1, Slaves2, Group2);
         stop -> ok
     end.
 
@@ -55,11 +54,7 @@ init(Id, Rnd, Grp, Master) ->
             Master ! {error, "no reply from leader"}
     end.
 
-% leader procedure
-
-% slave procedure
-% accepts messages from master and leader
-% has a sequence number and a copy of last message from leader
+% extended with two arguments: N and Last
 slave(Id, Master, Leader, N, Last, Slaves, Group) ->
     receive
         % request from master to multicast message
