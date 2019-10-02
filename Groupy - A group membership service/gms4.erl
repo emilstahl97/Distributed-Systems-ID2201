@@ -62,36 +62,8 @@ leader(Id, Master, N, Slaves, Group) ->
 % accepts messages from master and leader
 % has a sequence number and a copy of last message from leader
 slave(Id, Master, Leader, N, Last, Slaves, Group) ->
-        receive
-                {mcast, Msg} ->
-                    Leader ! {mcast, Msg},
-                    slave(Id, Master, Leader, N, Last, Slaves, Group);
-                {join, Wrk, Peer} ->
-                    Leader ! {join, Wrk, Peer},
-                    slave(Id, Master, Leader, N, Last, Slaves, Group);
-        
-                % updated for reliable multicast, ignore old messages
-                {msg, I, Msg} ->
-                    case I < N of
-                        true ->
-                            slave(Id, Master, Leader, N, Last, Slaves, Group);
-                        false ->
-                            Master ! Msg,
-                            Last2 = {msg, I, Msg},
-                            slave(Id, Master, Leader, I+1, Last2, Slaves, Group)
-                    end;
-                {view, I, [Leader|Slaves2], Group2} ->
-                    Master ! {view, Group2},
-                    Last2 = {view, I, [Leader|Slaves2], Group2},
-                    slave(Id, Master, Leader, I+1, Last2, Slaves2, Group2);
-        
-                % leader crashed
-                {'DOWN', _Ref, process, Leader, _Reason} ->
-                    election(Id, Master, N, Last, Slaves, Group);
-        
-                stop ->
-                    ok
-            end.
+    gms3:slave(Id, Master, Leader, N, Last, Slaves, Group).
+       
 
 
 % election procedure
