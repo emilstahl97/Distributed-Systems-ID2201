@@ -44,7 +44,7 @@ schedule_stabilize() ->
   timer:send_interval(?Stabilize, self(), stabilize).   % sends a stabilize message to self() repeatedly after ?Stabilize milliseconds
 
 % function for a node
-% a node will have a key, a predecessor and a successor
+% a node will in this version have a key, a predecessor and a successor
 node(Id, Predecessor, Successor) ->
     receive
       % peer wants to know our key (Id)
