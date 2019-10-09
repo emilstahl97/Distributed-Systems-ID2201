@@ -149,7 +149,7 @@ create_probe(Id, {_, _, Spid}) ->
 % calculate the time it took to pass a probe message around the ring
 remove_probe(Time, Nodes) ->
   T = erlang:system_time(micro_seconds) - Time,
-  io:format("Probe time: ~w Nodes: ~w", [T, Nodes]).
+  io:format("Probe time: ~w micro seconds ~n Nodes: ~w", [T, Nodes]).
 
 % forward the probe message to the successor
 forward_probe(Ref, Time, Nodes, Id, {_, _, Spid}) ->
