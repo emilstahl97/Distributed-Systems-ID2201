@@ -250,7 +250,7 @@ down(Ref, {_, Ref, _}, Successor, Next) ->
 % successor has died
 down(Ref, Predecessor, {_, Ref, _}, {Nkey, Npid}) ->
   % monitor the new successor
-io:format("smeone died"),
+io:format("Successor of ~w died~n", [Ref]),
   Nref = monitor(Npid),
   % to repair the ring
   Npid ! stabilize,
