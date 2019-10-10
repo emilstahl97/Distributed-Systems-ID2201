@@ -45,7 +45,7 @@ schedule_stabilize() ->
 
 % function for a node
 % a node will in this version have a key, a predecessor and a successor
-node(Id, Predecessor, Successor) ->
+node(Id, Predecessor, Successor) -> 
     receive
       % peer wants to know our key (Id)
       {key, Qref, Peer} ->

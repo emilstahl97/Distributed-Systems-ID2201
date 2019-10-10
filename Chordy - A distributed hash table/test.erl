@@ -9,7 +9,7 @@
 
 start(Module) ->
     Id = key:generate(),
-    apply(Module, start, [Id]).
+    apply(Module, start, [Id]).    
 
 
 start(Module, P) ->

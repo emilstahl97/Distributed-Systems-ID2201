@@ -97,7 +97,7 @@ node(Id, Predecessor, Successor, Store) ->
         node(Id, Predecessor, Successor, Store);
 
       % a message to hand over key-value Elements to a new node
-      {handover, Elements} ->
+      {handover, Elements} ->        
         Merged = storage:merge(Store, Elements),
         node(Id, Predecessor, Successor, Merged);
 
@@ -105,7 +105,7 @@ node(Id, Predecessor, Successor, Store) ->
       stop ->
         ok
     end.
-
+      
 % handover some storage
 handover(Id, Store, Nkey, Npid) ->
   %Rest is the elements that are in between our node Id (the predecessor of Nkey) and the new key
